@@ -1,0 +1,70 @@
+type Query {
+  sessions(
+    id: ID
+    title: String
+    description: String
+    startsAt: String
+    endsAt: String
+    room: String
+    day: String
+    format: String
+    track: String
+    level: String
+    favorite: Boolean
+  ): [Session]
+
+  sessionById(id: ID): SessionOrError
+
+  speakers: [Speaker]
+  speakerById: Speaker
+}
+
+union SessionOrError = Session | Error
+
+type Error {
+  code: String
+  message: String
+  token: String
+}
+
+type Mutation {
+  toggleFavoriteSession(id: ID): Session
+  addNewSession(session: SessionInput): Session
+}
+
+input SessionInput {
+  title: String
+  description: String
+  startsAt: String
+  endsAt: String
+  room: String
+  day: String
+  format: String
+  level: String
+  favorite: Boolean
+}
+
+type Session {
+  id: ID!
+  title: String
+  description: String
+  startsAt: String
+  endsAt: String
+  room: String
+  day: String
+  format: String
+  track: String
+    @deprecated(
+      reason: "Too many sessions do not fit into a single track, we will be migrating to a tag based system in the future..."
+    )
+  favorite: Boolean
+  level: String
+  speakers: [Speaker]
+}
+
+type Speaker {
+  id: ID!
+  bio: String
+  name: String
+  sessions: [Session]
+}
